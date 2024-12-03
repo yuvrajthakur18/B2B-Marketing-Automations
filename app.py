@@ -275,6 +275,9 @@ def generate_cold_email(data, sender, sender_company):
         lead_keywords = ', '.join(str(keyword) for keyword in keywords.get("Lead", []))
         company_keywords = ', '.join(str(keyword) for keyword in keywords.get("Company", []))
 
+        # sender details
+        sender = sender.get("UnifiedLeadDetails", {})
+
 
         # Create a structured prompt
         prompt = f"""
@@ -351,7 +354,7 @@ def generate_cold_email(data, sender, sender_company):
 
         """
 
-        print("Generated Prompt : " ,prompt)
+        # print("Generated Prompt : " ,prompt)
         
         # Generate email using AI
         chat_completions = client.chat.completions.create(
