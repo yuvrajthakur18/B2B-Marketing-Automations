@@ -425,7 +425,7 @@ if prospect_names:
                 
                 # Display the generated email
                 st.subheader("Generated Email")
-                st.text_area("Cold Email", email, height=600)
+                st.text_area("Cold Email", email, height=600, disabled=True)
         else:
             st.error("Selected prospect not found in the database.")
 else:
