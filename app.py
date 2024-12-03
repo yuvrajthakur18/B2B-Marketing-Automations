@@ -392,6 +392,15 @@ def fetch_prospect_by_name(collection, person_name):
     # Search for a specific prospect by name in the nested field
     return collection.find_one({"UnifiedLeadDetails.Name": person_name})
 
+# Function to save feedback into MongoDB
+def save_feedback_to_mongo(collection, lead_name, email, feedback):
+    feedback_entry = {
+        "LeadName": lead_name,
+        "GeneratedEmail": email,
+        "Feedback": feedback
+    }
+    collection.insert_one(feedback_entry)
+
 # Streamlit interface
 st.title("Cold Email Generator")
 
@@ -426,6 +435,15 @@ if prospect_names:
                 # Display the generated email
                 st.subheader("Generated Email")
                 st.text_area("Cold Email", email, height=600)
+
+                # Input field for feedback
+                feedback = st.text_area("Provide Feedback on the Email", height=100)
+
+                # Button to save feedback
+                if st.button("Submit Feedback"):
+                    # Save the feedback, email, and lead's name into MongoDB
+                    save_feedback_to_mongo(collection, selected_name, email, feedback)
+                    st.success("Feedback submitted successfully!")
         else:
             st.error("Selected prospect not found in the database.")
 else:
