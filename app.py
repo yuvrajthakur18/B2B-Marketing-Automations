@@ -410,7 +410,16 @@ if prospect_names:
         if selected_prospect:
             # Display prospect data
             st.subheader("Prospect Details")
-            st.json(selected_prospect)  # Display prospect's data in JSON format
+            
+            # Show the first 4 lines of the prospect's data
+            initial_lines = str(selected_prospect).splitlines()[:4]
+            compressed_details = "\n".join(initial_lines)
+            
+            # Display compressed details and add an expander for the full data
+            st.text_area("Summary", compressed_details, height=100, disabled=True)
+            
+            with st.expander("Show Full Details"):
+                st.json(selected_prospect)  # Full prospect data in JSON format
 
             # Add a button to generate the email
             if st.button("Generate Cold Email"):
