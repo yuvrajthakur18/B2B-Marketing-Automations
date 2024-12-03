@@ -345,7 +345,7 @@ def generate_cold_email(data, sender, sender_company):
         - Craft a tailored email that captures the recipient's attention by focusing on one or two compelling topics.
         - Highlight how the sender's expertise or offerings align with the recipient’s work.
         - Maintain a warm, professional tone.
-        - Please generate the email content only, without any additional commentary or explanation.
+        - Please generate the email content only in 3 paragraphs, without any additional commentary or explanation.
 
         ### Example Email Flow:
         - **Opening**: Start by referencing a shared or relevant insight from the prioritized data.
