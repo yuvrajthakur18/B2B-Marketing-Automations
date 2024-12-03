@@ -408,12 +408,18 @@ if prospect_names:
         selected_prospect = fetch_prospect_by_name(collection, selected_name)
         
         if selected_prospect:
-            # Generate the cold email
-            email = generate_cold_email(selected_prospect, sender_details, sender_company_details)
-            
-            # Display the generated email
-            st.subheader("Generated Email")
-            st.text_area("Cold Email", email, height=200, disabled=True)
+            # Display prospect data
+            st.subheader("Prospect Details")
+            st.json(selected_prospect)  # Display prospect's data in JSON format
+
+            # Add a button to generate the email
+            if st.button("Generate Cold Email"):
+                # Generate the cold email
+                email = generate_cold_email(selected_prospect, sender_details, sender_company_details)
+                
+                # Display the generated email
+                st.subheader("Generated Email")
+                st.text_area("Cold Email", email, height=200, disabled=True)
         else:
             st.error("Selected prospect not found in the database.")
 else:
