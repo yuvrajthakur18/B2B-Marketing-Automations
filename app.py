@@ -315,9 +315,9 @@ def generate_cold_email(data, sender, sender_company):
         - Most Recent Project: {recent_project if recent_project else 'None'}
 
         **Sender (Email Author):**
-        - Name: {sender.get('name', 'N/A')}
-        - Title: {sender.get('title', 'N/A')}
-        - Company: {sender.get('company', 'N/A')}
+        - Name: {sender.get('Name', 'N/A')}
+        - Title: {sender.get('Title', 'N/A')}
+        - Company: {sender.get('Company', 'N/A')}
         - LinkedIn URL: {sender.get('linkedin_url', 'N/A')}
 
         **Sender’s Company:**
