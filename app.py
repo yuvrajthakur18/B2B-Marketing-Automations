@@ -415,10 +415,7 @@ if prospect_names:
             initial_lines = str(selected_prospect).splitlines()[:4]
             compressed_details = "\n".join(initial_lines)
             
-            # Display compressed details and add an expander for the full data
-            st.text_area("Summary", compressed_details, height=100)
-            
-            with st.expander("Show Full Details"):
+            with st.expander("View Lead's Details"):
                 st.json(selected_prospect)  # Full prospect data in JSON format
 
             # Add a button to generate the email
@@ -428,7 +425,7 @@ if prospect_names:
                 
                 # Display the generated email
                 st.subheader("Generated Email")
-                st.text_area("Cold Email", email, height=200, disabled=True)
+                st.text_area("Cold Email", email, height=1000)
         else:
             st.error("Selected prospect not found in the database.")
 else:
