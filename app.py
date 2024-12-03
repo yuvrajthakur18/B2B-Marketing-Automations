@@ -45,12 +45,14 @@ try:
 except requests.exceptions.RequestException as e:
     print("Error fetching prospects:", e)
 
-# Extract prospect names from the nested structure
-prospect_names = [prospect["UnifiedLeadDetails"]["Name"] for prospect in prospects if "UnifiedLeadDetails" in prospect and "Name" in prospect["UnifiedLeadDetails"]]
 
-if prospect_names:
-    # Dropdown for selecting a prospect
-    selected_name = st.selectbox("Select a prospect", prospect_names)
+selected_name = st.selectbox("Select a prospect")
+# Extract prospect names from the nested structure
+# prospect_names = [prospect["UnifiedLeadDetails"]["Name"] for prospect in prospects if "UnifiedLeadDetails" in prospect and "Name" in prospect["UnifiedLeadDetails"]]
+
+# if prospect_names:
+#     # Dropdown for selecting a prospect
+#     selected_name = st.selectbox("Select a prospect", prospect_names)
 
     # if selected_name:
     #     # Fetch the data for the selected prospect
