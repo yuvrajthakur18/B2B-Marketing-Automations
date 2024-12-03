@@ -46,7 +46,6 @@ except requests.exceptions.RequestException as e:
     print("Error fetching prospects:", e)
 
 
-selected_name = st.selectbox("Select a prospect", prospects)
 # Extract prospect names from the nested structure
 # prospect_names = [prospect["UnifiedLeadDetails"]["Name"] for prospect in prospects if "UnifiedLeadDetails" in prospect and "Name" in prospect["UnifiedLeadDetails"]]
 
