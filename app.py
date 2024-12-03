@@ -416,7 +416,7 @@ if prospect_names:
             compressed_details = "\n".join(initial_lines)
             
             # Display compressed details and add an expander for the full data
-            st.text_area("Summary", compressed_details, height=100, disabled=True)
+            st.text_area("Summary", compressed_details, height=100)
             
             with st.expander("Show Full Details"):
                 st.json(selected_prospect)  # Full prospect data in JSON format
