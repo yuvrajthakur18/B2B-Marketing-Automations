@@ -31,16 +31,17 @@ collection = connect_to_mongo()
 import requests
 
 # Define the API URL for fetching all prospects
-api_url = "http://your-backend-url/api/prospects"
+get_all_prospects = "http://172.190.96.197:5000/api/leads/"
 
 # Call the API
 try:
-    response = requests.get(api_url)
+    response = requests.get(get_all_prospects)
     response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
     
     # Parse the JSON response
     prospects = response.json()
-    print("Fetched Prospects:", prospects)
+    selected_name = st.selectbox("Select a prospect", prospects)
+    
 
 except requests.exceptions.RequestException as e:
     print("Error fetching prospects:", e)
