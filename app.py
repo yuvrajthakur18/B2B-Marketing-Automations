@@ -23,8 +23,14 @@ def connect_to_mongo():
 
 # Function to transform prospect data into the required JSON structure
 def transform_prospect_data(prospect):
-    def format_section(title, data, color):
-        section_lines = [f"**<span style='color:{color}'>{title}:</span>**\n"]
+    def format_section(title, data, color, keys_to_remove=None):
+        """Filters the data by removing specified keys and then formats it."""
+        # Remove unwanted keys
+        if keys_to_remove:
+            data = {k: v for k, v in data.items() if k not in keys_to_remove}
+
+        # Format the filtered data into a string    
+        section_lines = [f"<h3 style='color:{color}'>{title}:</h3>"]  # Use <h3> for title styling
         if isinstance(data, dict):
             for key, value in data.items():
                 if isinstance(value, list):
@@ -33,26 +39,33 @@ def transform_prospect_data(prospect):
                 elif isinstance(value, dict):
                     # Flatten dictionary to string
                     value = str(value)
-                section_lines.append(f"- **{key}:** {value}\n")
+                section_lines.append(f"<p><strong>{key}:</strong> {value}</p>")  # Use <p> and <strong> for styling
         elif isinstance(data, list):
             # Handle case where data is a list
             for item in data:
-                section_lines.append(f"- {str(item)}\n")
+                section_lines.append(f"<p>{item}</p>")  # Each list item is in a <p> with line breaks
         else:
             # Handle other data types (e.g., string or None)
-            section_lines.append(f"- {str(data)}\n")
+            section_lines.append(f"<p>{str(data)}</p>")
+
         return "".join(section_lines)
 
+    # Define the keys to remove from UnifiedLeadDetails and UnifiedCompanyDetails
+    lead_keys_to_remove = ["other information", "past experience"]
+    company_keys_to_remove = ["key activities"]
 
+    # Format the data for Lead and Company details
     unified_lead_details = format_section(
         "Unified Lead Details", 
         prospect.get("UnifiedLeadDetails", {}),
-        color="green"
+        color="green",
+        keys_to_remove=lead_keys_to_remove
     )
     unified_company_details = format_section(
         "Unified Company Details", 
         prospect.get("UnifiedCompanyDetails", {}),
-        color="green"
+        color="green",
+        keys_to_remove=company_keys_to_remove
     )
     lead_recent_posts = format_section(
         "Lead Recent Posts",
@@ -76,16 +89,19 @@ def transform_prospect_data(prospect):
     )
     references = f"<h4 style='color:red;'><b>References</b></h4><p>{', '.join(prospect.get('References', [])) if prospect.get('References') else 'N/A'}</p>"
 
+    # Display the formatted sections with applied styles using st.markdown
     return f"""
-    {unified_lead_details}
-    {unified_company_details}
-    {lead_recent_posts}
-    {company_recent_posts}
-    {recent_projects_and_work}
-    {keywords}
-    {references}
+        <div>{unified_lead_details}</div>
+        <div>{unified_company_details}</div>
+        <div>{lead_recent_posts}</div>
+        <div>{company_recent_posts}</div>
+        <div>{recent_projects_and_work}</div>
+        <div>{keywords}</div>
+        <div>{references}</div>
     """
 
+
+    
 # Streamlit interface
 st.title("Cold Email Generator")
 
