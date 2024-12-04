@@ -47,7 +47,7 @@ def transform_prospect_data(prospect):
     unified_lead_details = format_section(
         "Unified Lead Details", 
         prospect.get("UnifiedLeadDetails", {}),
-        color="blue"
+        color="green"
     )
     unified_company_details = format_section(
         "Unified Company Details", 
@@ -57,7 +57,7 @@ def transform_prospect_data(prospect):
     lead_recent_posts = format_section(
         "Lead Recent Posts",
         prospect.get("LeadRecentPosts", {}),
-        color="blue"
+        color="green"
     )
     company_recent_posts = format_section(
         "Company Recent Posts",
@@ -67,12 +67,12 @@ def transform_prospect_data(prospect):
     recent_projects_and_work = format_section(
         "Recent Projects and works",
         prospect.get("RecentProjectsAndWork", {}),
-        color="blue"
+        color="green"
     )
     keywords = format_section(
         "Keywords",
         prospect.get("Keywords", {}),
-        color="purple"
+        color="green"
     )
     references = f"<h4 style='color:red;'><b>References</b></h4><p>{', '.join(prospect.get('References', [])) if prospect.get('References') else 'N/A'}</p>"
 
