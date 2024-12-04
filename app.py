@@ -69,24 +69,24 @@ try:
                 with st.expander("View Lead's Details"):
                     st.json(selected_prospect)  # Full prospect data in JSON format
 
-                # Add a button to show all emails for the selected prospect
-                if st.button("Show All Emails"):
-                    # Fetch emails for the selected lead
-                    try:
-                        emails_url = f"http://172.190.96.197:5000/api/emails/lead/{selected_obj_id}"
-                        email_response = requests.get(emails_url)
-                        email_response.raise_for_status()  # Raise error for bad responses
+                # # Add a button to show all emails for the selected prospect
+                # if st.button("Show All Emails"):
+                #     # Fetch emails for the selected lead
+                #     try:
+                #         emails_url = f"http://172.190.96.197:5000/api/emails/lead/{selected_obj_id}"
+                #         email_response = requests.get(emails_url)
+                #         email_response.raise_for_status()  # Raise error for bad responses
 
-                        # Parse the email response
-                        emails = email_response.json()
+                #         # Parse the email response
+                #         emails = email_response.json()
 
-                        if emails:
-                            st.subheader("Emails for this Prospect")
-                            st.write(emails)  # Show all emails (you can format it as needed)
-                        else:
-                            st.write("No emails found for this prospect.")
-                    except requests.exceptions.RequestException as e:
-                        st.error(f"Error fetching emails: {e}")
+                #         if emails:
+                #             st.subheader("Emails for this Prospect")
+                #             st.write(emails)  # Show all emails (you can format it as needed)
+                #         else:
+                #             st.write("No emails found for this prospect.")
+                #     except requests.exceptions.RequestException as e:
+                #         st.error(f"Error fetching emails: {e}")
 
                 # Add a session state variable for email_id
                 if "email_id" not in st.session_state:
