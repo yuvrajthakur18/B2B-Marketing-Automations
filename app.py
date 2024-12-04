@@ -89,16 +89,26 @@ def transform_prospect_data(prospect):
     )
     references = f"<h4 style='color:red;'><b>References</b></h4><p>{', '.join(prospect.get('References', [])) if prospect.get('References') else 'N/A'}</p>"
 
-    # Display the formatted sections with applied styles using st.markdown
-    return f"""
-        <div>{unified_lead_details}</div>
-        <div>{unified_company_details}</div>
-        <div>{lead_recent_posts}</div>
-        <div>{company_recent_posts}</div>
-        <div>{recent_projects_and_work}</div>
-        <div>{keywords}</div>
-        <div>{references}</div>
-    """
+    # # Display the formatted sections with applied styles using st.markdown
+    # return f"""
+    #     <div>{unified_lead_details}</div>
+    #     <div>{unified_company_details}</div>
+    #     <div>{lead_recent_posts}</div>
+    #     <div>{company_recent_posts}</div>
+    #     <div>{recent_projects_and_work}</div>
+    #     <div>{keywords}</div>
+    #     <div>{references}</div>
+    # """
+
+    return {
+        "Unified Lead Details": unified_lead_details,
+        "Unified Company Details": unified_company_details,
+        "Lead Recent Posts": lead_recent_posts,
+        "Company Recent Posts": company_recent_posts,
+        "Recent Projects and Works": recent_projects_and_work,
+        "Keywords": keywords,
+        "References": references
+    }
 
 
     
@@ -144,8 +154,11 @@ try:
             if selected_prospect:
                 transformed_data = transform_prospect_data(selected_prospect)
                 st.subheader("Prospect Details")
-                with st.expander("View Transformed Data"):
-                    st.markdown(transformed_data, unsafe_allow_html=True)
+                
+                # Create a main expander for viewing data (optional)
+                for section_title, section_content in transformed_data.items():
+                    with st.expander(section_title):
+                        st.markdown(section_content, unsafe_allow_html=True)
 
                 # # Add a button to show all emails for the selected prospect
                 # if st.button("Show All Emails"):
