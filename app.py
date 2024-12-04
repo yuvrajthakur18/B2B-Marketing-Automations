@@ -21,6 +21,70 @@ def connect_to_mongo():
     collection = db[COLLECTION_NAME]
     return collection
 
+# Function to transform prospect data into the required JSON structure
+def transform_prospect_data(prospect):
+    def format_section(title, data, color):
+        section_lines = [f"**<span style='color:{color}'>{title}:</span>**\n"]
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if isinstance(value, list):
+                    # Convert list items to strings, join with a comma
+                    value = ", ".join([str(item) for item in value])
+                elif isinstance(value, dict):
+                    # Flatten dictionary to string
+                    value = str(value)
+                section_lines.append(f"- **{key}:** {value}\n")
+        elif isinstance(data, list):
+            # Handle case where data is a list
+            for item in data:
+                section_lines.append(f"- {str(item)}\n")
+        else:
+            # Handle other data types (e.g., string or None)
+            section_lines.append(f"- {str(data)}\n")
+        return "".join(section_lines)
+
+
+    unified_lead_details = format_section(
+        "Unified Lead Details", 
+        prospect.get("UnifiedLeadDetails", {}),
+        color="blue"
+    )
+    unified_company_details = format_section(
+        "Unified Company Details", 
+        prospect.get("UnifiedCompanyDetails", {}),
+        color="green"
+    )
+    lead_recent_posts = format_section(
+        "Lead Recent Posts",
+        prospect.get("LeadRecentPosts", {}),
+        color="blue"
+    )
+    company_recent_posts = format_section(
+        "Company Recent Posts",
+        prospect.get("CompanyRecentPosts", {}),
+        color="green"
+    )
+    recent_projects_and_work = format_section(
+        "Recent Projects and works",
+        prospect.get("RecentProjectsAndWork", {}),
+        color="blue"
+    )
+    keywords = format_section(
+        "Keywords",
+        prospect.get("Keywords", {}),
+        color="purple"
+    )
+    references = f"<h4 style='color:red;'><b>References</b></h4><p>{', '.join(prospect.get('References', [])) if prospect.get('References') else 'N/A'}</p>"
+
+    return f"""
+    {unified_lead_details}
+    {unified_company_details}
+    {lead_recent_posts}
+    {company_recent_posts}
+    {recent_projects_and_work}
+    {keywords}
+    {references}
+    """
 
 # Streamlit interface
 st.title("Cold Email Generator")
@@ -62,12 +126,10 @@ try:
             )
             
             if selected_prospect:
-                # Display prospect data
+                transformed_data = transform_prospect_data(selected_prospect)
                 st.subheader("Prospect Details")
-                
-                # Show prospect details : 
-                with st.expander("View Lead's Details"):
-                    st.json(selected_prospect)  # Full prospect data in JSON format
+                with st.expander("View Transformed Data"):
+                    st.markdown(transformed_data, unsafe_allow_html=True)
 
                 # # Add a button to show all emails for the selected prospect
                 # if st.button("Show All Emails"):
@@ -123,40 +185,41 @@ try:
                     st.text_area("Cold Email", generated_email, height=600)
 
                 # Input field for feedback and form submission
-                with st.form("feedback_form"):
-                    # Input field for reviewer name
-                    reviewer_name = st.text_input("Reviewer Name", value="")  # New field for reviewer name
+                feedback_container = st.empty()  # This container will be used to reset the input field
 
+                with feedback_container.form("feedback_form"):
+                    # Text area for feedback, no session state required
                     feedback = st.text_area("Provide Feedback on the Email", height=100)
 
                     # Button to submit feedback
                     submitted = st.form_submit_button("Submit Feedback")
 
                     if submitted:
-                        if not st.session_state["email_id"]:
+                        if not st.session_state.get("email_id"):
                             st.error("First generate an email")
-                        elif not reviewer_name.strip():
-                            st.error("Reviewer name is required.")
                         else:
                             # Prepare the data for the feedback API
                             feedback_data = {
                                 "email_id": st.session_state["email_id"],
-                                "comment": feedback,
-                                "person_name": reviewer_name.strip()
+                                "comment": feedback,  # Directly use the value from the input
                             }
-                        
+
                             try:
                                 # Call the feedback API
                                 feedback_api_url = "http://172.190.96.197:5000/api/feedbacks/create"
                                 feedback_response = requests.post(
-                                    feedback_api_url, 
+                                    feedback_api_url,
                                     json=feedback_data
                                 )
                                 feedback_response.raise_for_status()
                                 st.success("Feedback submitted successfully!")
+
+                                # Manually clear the form by resetting the container
+                                feedback_container.empty()  # This will clear the feedback input
+
                             except requests.exceptions.RequestException as e:
                                 st.error(f"Error submitting feedback: {e}")
-        
+                        
             else:
                 st.error("Selected prospect not found in the database.")
     else:
