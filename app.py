@@ -107,7 +107,6 @@ def transform_prospect_data(prospect):
         "Company Recent Posts": company_recent_posts,
         "Recent Projects and Works": recent_projects_and_work,
         "Keywords": keywords,
-        "References": references
     }
 
 
